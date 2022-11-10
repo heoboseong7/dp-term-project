@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+}
+
+group 'com.holub'
+version '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    jUnitVersion = "5.8.1"
+}
+
+dependencies {
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${jUnitVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${jUnitVersion}"
+}
