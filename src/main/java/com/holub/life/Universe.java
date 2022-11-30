@@ -7,13 +7,9 @@ import javax.swing.*;
 import java.awt.event.*;
 
 import com.holub.io.Files;
+import com.holub.patterns.Pattern;
+import com.holub.patterns.PlusPattern;
 import com.holub.ui.MenuSite;
-
-import com.holub.life.Cell;
-import com.holub.life.Storable;
-import com.holub.life.Clock;
-import com.holub.life.Neighborhood;
-import com.holub.life.Resident;
 
 /**
  * The Universe is a mediator that sits between the Swing
@@ -46,6 +42,9 @@ public class Universe extends JPanel
 
 	// The constructor is private so that the universe can be created
 	// only by an outer-class method [Neighborhood.createUniverse()].
+
+	//FIXME 초기값 DefaultPattern 으로 바꾸기
+	private Pattern pattern = new PlusPattern();
 
 	private Universe()
 	{	// Create the nested Cells that comprise the "universe." A bug
@@ -97,7 +96,11 @@ public class Universe extends JPanel
 				{	Rectangle bounds = getBounds();
 					bounds.x = 0;
 					bounds.y = 0;
-					outermostCell.userClicked(e.getPoint(),bounds);
+
+					int pixelsPerCell = bounds.width / DEFAULT_GRID_SIZE / DEFAULT_GRID_SIZE;
+					pattern.getPoints(bounds, e.getPoint(), pixelsPerCell)
+							.forEach(point -> outermostCell.userClicked(point, bounds));
+
 					repaint();
 				}
 			}
