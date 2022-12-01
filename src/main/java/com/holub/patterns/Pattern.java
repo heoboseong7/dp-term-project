@@ -28,8 +28,8 @@ public abstract class Pattern {
 
     // 해당 패턴이 들어가는 직사각형의 왼쪽 상단과 우측 하단의 좌표를 통해 가능한지 검사
     private boolean isValid(Rectangle bound, Point startPoint, int pixelsPerCell) {
-        return (startPoint.x + leftUpperMost().x * pixelsPerCell) >= 0
-                && (startPoint.y + leftUpperMost().y * pixelsPerCell) >= 0
+        return startPoint.x + leftUpperMost().x * pixelsPerCell >= 0
+                && startPoint.y + leftUpperMost().y * pixelsPerCell >= 0
                 && startPoint.x + rightLowerMost().x * pixelsPerCell <= bound.width
                 && startPoint.y + rightLowerMost().y * pixelsPerCell <= bound.height;
     }
