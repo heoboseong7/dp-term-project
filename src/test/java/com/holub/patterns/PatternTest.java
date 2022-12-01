@@ -28,7 +28,7 @@ public class PatternTest {
         List<Point> result = pattern.getPoints(bounds, startPoint, pixelsPerCell);
 
         //then
-        assertThat(result).contains(startPoint);
+        assertThat(result).containsExactlyInAnyOrder(startPoint);
     }
 
     @Test
@@ -39,7 +39,7 @@ public class PatternTest {
         //when
         List<Point> result = pattern.getPoints(bounds, startPoint, pixelsPerCell);
         //then
-        assertThat(result).contains(
+        assertThat(result).containsExactlyInAnyOrder(
                 PointUtils.createPoint(1, 1, pixelsPerCell),
                 PointUtils.createPoint(1, 2, pixelsPerCell),
                 PointUtils.createPoint(1, 3, pixelsPerCell),
