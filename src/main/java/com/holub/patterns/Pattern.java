@@ -1,6 +1,7 @@
 package com.holub.patterns;
 
 import com.holub.life.Position;
+import com.holub.tools.ExceptionMessages;
 
 import java.awt.*;
 import java.util.List;
@@ -17,7 +18,7 @@ public abstract class Pattern {
     public final List<Point> getPoints(Rectangle bound, Point startPoint, int pixelsPerCell) {
         // 유효하지 않으면 예외 발생
         if(!isValid(bound, startPoint, pixelsPerCell)) {
-            throw new IllegalArgumentException("범위를 벗어납니다.");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_POINT);
         }
 
         return getPositions().stream()
