@@ -1,11 +1,13 @@
 package com.holub.life;
 
-import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
 import java.util.Timer;		// overrides java.awt.timer
-import com.holub.ui.MenuSite;
+
+import com.holub.life.command.AddCommand;
+import com.holub.life.command.MenuControl;
+import com.holub.life.command.MenuComponent;
 import com.holub.tools.Publisher;
 
 /***
@@ -100,14 +102,17 @@ public class Clock
 										toDo=='M' ? 70 :	  // medium
 										toDo=='F' ? 30 : 0 ); // fast
 				}
-			};
-																	// {=midSetup}
-		MenuSite.addLine(this,"Go","Halt",  			modifier);
-		MenuSite.addLine(this,"Go","Tick (Single Step)",modifier);
-		MenuSite.addLine(this,"Go","Agonizing",	 	  	modifier);
-		MenuSite.addLine(this,"Go","Slow",		 		modifier);
-		MenuSite.addLine(this,"Go","Medium",	 	 	modifier);
-		MenuSite.addLine(this,"Go","Fast",				modifier); // {=endSetup}
+			};// {=midSetup}
+
+		MenuControl menuControl = new MenuControl();
+
+		menuControl.setCommand(new AddCommand(new MenuComponent(this,"Halt", modifier)));
+		menuControl.setCommand(new AddCommand(new MenuComponent(this,"Tick (Single Step)", modifier)));
+		menuControl.setCommand(new AddCommand(new MenuComponent(this,"Agonizing", modifier)));
+		menuControl.setCommand(new AddCommand(new MenuComponent(this,"Slow", modifier)));
+		menuControl.setCommand(new AddCommand(new MenuComponent(this,"Medium", modifier)));
+		menuControl.setCommand(new AddCommand(new MenuComponent(this,"Fast", modifier)));
+
 	}	//{=endCreateMenus}
 
 	private Publisher publisher = new Publisher();
@@ -174,4 +179,5 @@ public class Clock
 					MenuSelectionManager.defaultManager().getSelectedPath();
 		return ( path != null && path.length > 0 );
 	}
+
 }
