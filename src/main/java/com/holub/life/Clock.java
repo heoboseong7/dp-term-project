@@ -1,13 +1,14 @@
 package com.holub.life;
 
-import java.awt.event.*;
 import javax.swing.*;
+import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.Timer;		// overrides java.awt.timer
 
 import com.holub.life.command.AddCommand;
 import com.holub.life.command.MenuControl;
 import com.holub.life.command.MenuComponent;
+import com.holub.life.strategy.ConcreteActionListener;
 import com.holub.tools.Publisher;
 
 /***
@@ -87,23 +88,10 @@ public class Clock
 		// First set up a single listener that will handle all the
 		// menu-selection events except "Exit"
 
-		ActionListener modifier =									//{=startSetup}
-			new ActionListener()
-			{	public void actionPerformed(ActionEvent e)
-				{
-					String name = ((JMenuItem)e.getSource()).getName();
-					char toDo = name.charAt(0);
-
-					if( toDo=='T' )
-						tick();				      // single tick
-					else
-						startTicking(   toDo=='A' ? 500:	  // agonizing
-										toDo=='S' ? 150:	  // slow
-										toDo=='M' ? 70 :	  // medium
-										toDo=='F' ? 30 : 0 ); // fast
-				}
-			};// {=midSetup}
-
+		ActionListener modifier = new ConcreteActionListener(this);
+		/*
+		* 커맨드 패턴
+		* */
 		MenuControl menuControl = new MenuControl();
 
 		menuControl.setCommand(new AddCommand(new MenuComponent(this,"Halt", modifier)));
