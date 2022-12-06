@@ -6,13 +6,13 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ConcreteActionListener implements ActionListener {
+public class TickActionListener implements ActionListener {
 
     private TickAction tickAction;
 
     private Clock clock;
 
-    public ConcreteActionListener(Clock clock){
+    public TickActionListener(Clock clock){
         this.clock = clock;
     }
 

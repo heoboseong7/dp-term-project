@@ -8,7 +8,7 @@ import java.util.Timer;		// overrides java.awt.timer
 import com.holub.life.command.AddCommand;
 import com.holub.life.command.MenuControl;
 import com.holub.life.command.MenuComponent;
-import com.holub.life.strategy.ConcreteActionListener;
+import com.holub.life.strategy.TickActionListener;
 import com.holub.tools.Publisher;
 
 /***
@@ -88,7 +88,7 @@ public class Clock
 		// First set up a single listener that will handle all the
 		// menu-selection events except "Exit"
 
-		ActionListener modifier = new ConcreteActionListener(this);
+		ActionListener modifier = new TickActionListener(this);
 		/*
 		* 커맨드 패턴
 		* */
