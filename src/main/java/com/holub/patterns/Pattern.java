@@ -1,6 +1,7 @@
 package com.holub.patterns;
 
 import com.holub.life.Position;
+import com.holub.tools.ExceptionMessages;
 
 import java.awt.*;
 import java.util.List;
@@ -17,7 +18,7 @@ public abstract class Pattern {
     public final List<Point> getPoints(Rectangle bound, Point startPoint, int pixelsPerCell) {
         // 유효하지 않으면 예외 발생
         if(!isValid(bound, startPoint, pixelsPerCell)) {
-            throw new IllegalArgumentException("범위를 벗어납니다.");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_POINT);
         }
 
         return getPositions().stream()
@@ -27,8 +28,8 @@ public abstract class Pattern {
 
     // 해당 패턴이 들어가는 직사각형의 왼쪽 상단과 우측 하단의 좌표를 통해 가능한지 검사
     private boolean isValid(Rectangle bound, Point startPoint, int pixelsPerCell) {
-        return (startPoint.x + leftUpperMost().x * pixelsPerCell) >= 0
-                && (startPoint.y + leftUpperMost().y * pixelsPerCell) >= 0
+        return startPoint.x + leftUpperMost().x * pixelsPerCell >= 0
+                && startPoint.y + leftUpperMost().y * pixelsPerCell >= 0
                 && startPoint.x + rightLowerMost().x * pixelsPerCell <= bound.width
                 && startPoint.y + rightLowerMost().y * pixelsPerCell <= bound.height;
     }
