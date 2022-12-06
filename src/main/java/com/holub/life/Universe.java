@@ -53,10 +53,7 @@ public class Universe extends JPanel
 
 	//FIXME 초기값 DefaultPattern 으로 바꾸기
 
-	private Pattern pattern = SingletonEnum.INSTANCE.getPattern();
-
-
-
+	private Pattern pattern = SingletonEnum.INSTANCE.getPattern();		//Default Pattern
 
 
 
@@ -188,9 +185,19 @@ public class Universe extends JPanel
 						new ActionListener()
 						{	public void actionPerformed(ActionEvent e)
 						{
+							pattern = SingletonEnum.INSTANCE.getPattern();
+
+							//pattern.setPattern?
+						}
+						}
+				);
+		MenuSite.addLine
+				(	this, "Pattern", "Plus",
+						new ActionListener()
+						{	public void actionPerformed(ActionEvent e)
+						{
 
 							pattern =SingletonEnum.INSTANCE.getPluspattern();
-
 
 							//pattern.setPattern?
 						}

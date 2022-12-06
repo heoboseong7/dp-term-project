@@ -6,7 +6,7 @@ public enum SingletonEnum {
 
     INSTANCE;
 
-    public Pattern pattern = new DefaultPattern();
+    private Pattern pattern = new DefaultPattern();
     private Pattern pluspattern = new PlusPattern();
 
     public Pattern getPattern(){
