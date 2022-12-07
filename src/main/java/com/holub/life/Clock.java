@@ -1,14 +1,12 @@
 package com.holub.life;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.Timer;		// overrides java.awt.timer
 
-import com.holub.life.command.AddCommand;
-import com.holub.life.command.MenuControl;
-import com.holub.life.command.MenuComponent;
-import com.holub.life.strategy.TickActionListener;
+import com.holub.life.ticking.TickingStrategy;
+import com.holub.life.ticking.JustTickStrategy;
+import com.holub.ui.MenuSite;
 import com.holub.tools.Publisher;
 
 /***
@@ -87,21 +85,14 @@ public class Clock
 	{
 		// First set up a single listener that will handle all the
 		// menu-selection events except "Exit"
-
-		ActionListener modifier = new TickActionListener(this);
-		/*
-		* 커맨드 패턴
-		* */
-		MenuControl menuControl = new MenuControl();
-
-		menuControl.setCommand(new AddCommand(new MenuComponent(this,"Halt", modifier)));
-		menuControl.setCommand(new AddCommand(new MenuComponent(this,"Tick (Single Step)", modifier)));
-		menuControl.setCommand(new AddCommand(new MenuComponent(this,"Agonizing", modifier)));
-		menuControl.setCommand(new AddCommand(new MenuComponent(this,"Slow", modifier)));
-		menuControl.setCommand(new AddCommand(new MenuComponent(this,"Medium", modifier)));
-		menuControl.setCommand(new AddCommand(new MenuComponent(this,"Fast", modifier)));
-
-	}	//{=endCreateMenus}
+		MenuSite.addLine(this,"Go","Halt", new TickingStrategy(this, 0));
+		MenuSite.addLine(this,"Go","Tick (Single Step)", new JustTickStrategy(this));
+		MenuSite.addLine(this,"Go","Agonizing", new TickingStrategy(this, 500));
+		MenuSite.addLine(this,"Go","Slow", new TickingStrategy(this, 150));
+		MenuSite.addLine(this,"Go","Medium", new TickingStrategy(this, 70));
+		MenuSite.addLine(this,"Go","Fast", new TickingStrategy(this, 30));
+		MenuSite.addLine(this,"Go","Extreme", new TickingStrategy(this, 15)); // new menu
+	}
 
 	private Publisher publisher = new Publisher();
 
