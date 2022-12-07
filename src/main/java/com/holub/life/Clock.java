@@ -1,10 +1,12 @@
 package com.holub.life;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
 import java.util.Timer;		// overrides java.awt.timer
+
+import com.holub.life.ticking.DoubleTickStrategy;
+import com.holub.life.ticking.TickingStrategy;
+import com.holub.life.ticking.JustTickStrategy;
 import com.holub.ui.MenuSite;
 import com.holub.tools.Publisher;
 
@@ -84,31 +86,15 @@ public class Clock
 	{
 		// First set up a single listener that will handle all the
 		// menu-selection events except "Exit"
-
-		ActionListener modifier =									//{=startSetup}
-			new ActionListener()
-			{	public void actionPerformed(ActionEvent e)
-				{
-					String name = ((JMenuItem)e.getSource()).getName();
-					char toDo = name.charAt(0);
-
-					if( toDo=='T' )
-						tick();				      // single tick
-					else
-						startTicking(   toDo=='A' ? 500:	  // agonizing
-										toDo=='S' ? 150:	  // slow
-										toDo=='M' ? 70 :	  // medium
-										toDo=='F' ? 30 : 0 ); // fast
-				}
-			};
-																	// {=midSetup}
-		MenuSite.addLine(this,"Go","Halt",  			modifier);
-		MenuSite.addLine(this,"Go","Tick (Single Step)",modifier);
-		MenuSite.addLine(this,"Go","Agonizing",	 	  	modifier);
-		MenuSite.addLine(this,"Go","Slow",		 		modifier);
-		MenuSite.addLine(this,"Go","Medium",	 	 	modifier);
-		MenuSite.addLine(this,"Go","Fast",				modifier); // {=endSetup}
-	}	//{=endCreateMenus}
+		MenuSite.addLine(this,"Go","Halt", new TickingStrategy(this, 0));
+		MenuSite.addLine(this,"Go","Tick (Single Step)", new JustTickStrategy(this));
+		MenuSite.addLine(this,"Go","Double Tick (Two Step)", new DoubleTickStrategy(this));
+		MenuSite.addLine(this,"Go","Agonizing", new TickingStrategy(this, 500));
+		MenuSite.addLine(this,"Go","Slow", new TickingStrategy(this, 150));
+		MenuSite.addLine(this,"Go","Medium", new TickingStrategy(this, 70));
+		MenuSite.addLine(this,"Go","Fast", new TickingStrategy(this, 30));
+		MenuSite.addLine(this,"Go","Extreme", new TickingStrategy(this, 15)); // new menu
+	}
 
 	private Publisher publisher = new Publisher();
 
@@ -174,4 +160,5 @@ public class Clock
 					MenuSelectionManager.defaultManager().getSelectedPath();
 		return ( path != null && path.length > 0 );
 	}
+
 }
