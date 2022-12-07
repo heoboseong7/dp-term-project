@@ -179,8 +179,6 @@ public class Universe extends JPanel
 						{	public void actionPerformed(ActionEvent e)
 						{
 							pattern = SingletonEnum.INSTANCE.getPattern();
-
-							//pattern.setPattern?
 						}
 						}
 				);
@@ -189,10 +187,25 @@ public class Universe extends JPanel
 						new ActionListener()
 						{	public void actionPerformed(ActionEvent e)
 						{
-
-							pattern =SingletonEnum.INSTANCE.getPluspattern();
-
-							//pattern.setPattern?
+							pattern = SingletonEnum.INSTANCE.getPluspattern();
+						}
+						}
+				);
+		MenuSite.addLine
+				(	this, "Pattern", "Line",
+						new ActionListener()
+						{	public void actionPerformed(ActionEvent e)
+						{
+							pattern = SingletonEnum.INSTANCE.getLinepattern();
+						}
+						}
+				);
+		MenuSite.addLine
+				(	this, "Pattern", "L",
+						new ActionListener()
+						{	public void actionPerformed(ActionEvent e)
+						{
+							pattern = SingletonEnum.INSTANCE.getLpattern();
 						}
 						}
 				);
