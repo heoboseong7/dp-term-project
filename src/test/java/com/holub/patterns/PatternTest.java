@@ -91,4 +91,26 @@ public class PatternTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ExceptionMessages.INVALID_POINT);
     }
+
+    @Test
+    void Line_패턴_범위_밖_테스트() {
+        //given
+        Pattern pattern = new LinePattern();
+        Point startPoint = PointUtils.createPoint(64, 64, pixelsPerCell);
+        //when, then
+        assertThatThrownBy(() -> pattern.getPoints(bounds, startPoint, pixelsPerCell))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ExceptionMessages.INVALID_POINT);
+    }
+
+    @Test
+    void L_패턴_범위_밖_테스트() {
+        //given
+        Pattern pattern = new LPattern();
+        Point startPoint = PointUtils.createPoint(64, 64, pixelsPerCell);
+        //when, then
+        assertThatThrownBy(() -> pattern.getPoints(bounds, startPoint, pixelsPerCell))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ExceptionMessages.INVALID_POINT);
+    }
 }
