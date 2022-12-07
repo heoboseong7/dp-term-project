@@ -49,6 +49,39 @@ public class PatternTest {
     }
 
     @Test
+    void Line_패턴_정상_테스트() {
+        //given
+        Pattern pattern = new LinePattern();
+        Point startPoint = PointUtils.createPoint(0, 0, pixelsPerCell);
+        //when
+        List<Point> result = pattern.getPoints(bounds, startPoint, pixelsPerCell);
+        //then
+        assertThat(result).containsExactlyInAnyOrder(
+                PointUtils.createPoint(0, 1, pixelsPerCell),
+                PointUtils.createPoint(0, 2, pixelsPerCell),
+                PointUtils.createPoint(0, 3, pixelsPerCell),
+                PointUtils.createPoint(0, 0, pixelsPerCell)
+        );
+    }
+
+    @Test
+    void L_패턴_정상_테스트() {
+        //given
+        Pattern pattern = new LPattern();
+        Point startPoint = PointUtils.createPoint(0, 0, pixelsPerCell);
+        //when
+        List<Point> result = pattern.getPoints(bounds, startPoint, pixelsPerCell);
+        //then
+        assertThat(result).containsExactlyInAnyOrder(
+                PointUtils.createPoint(0, 1, pixelsPerCell),
+                PointUtils.createPoint(0, 2, pixelsPerCell),
+                PointUtils.createPoint(0, 3, pixelsPerCell),
+                PointUtils.createPoint(1, 3, pixelsPerCell),
+                PointUtils.createPoint(0, 0, pixelsPerCell)
+        );
+    }
+
+    @Test
     void Plus_패턴_범위_밖_테스트() {
         //given
         Pattern pattern = new PlusPattern();
