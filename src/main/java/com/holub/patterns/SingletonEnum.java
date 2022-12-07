@@ -9,6 +9,7 @@ public enum SingletonEnum {
     private Pattern pattern = new DefaultPattern();
     private Pattern pluspattern = new PlusPattern();
     private Pattern linepattern = new LinePattern();
+    private Pattern lpattern = new LPattern();
 
     public Pattern getPattern(){
         return pattern;
@@ -20,5 +21,9 @@ public enum SingletonEnum {
 
     public Pattern getLinepattern() {
         return linepattern;
+    }
+
+    public Pattern getLpattern() {
+        return lpattern;
     }
 }

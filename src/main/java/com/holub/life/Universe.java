@@ -200,6 +200,15 @@ public class Universe extends JPanel
 						}
 						}
 				);
+		MenuSite.addLine
+				(	this, "Pattern", "L",
+						new ActionListener()
+						{	public void actionPerformed(ActionEvent e)
+						{
+							pattern = SingletonEnum.INSTANCE.getLpattern();
+						}
+						}
+				);
 	}
 
 	/** Singleton Accessor. The Universe object itself is manufactured
