@@ -7,12 +7,11 @@ import javax.swing.*;
 import java.awt.event.*;
 
 import com.holub.io.Files;
-import com.holub.patterns.DefaultPattern;
 import com.holub.patterns.Pattern;
-import com.holub.patterns.PlusPattern;
 import com.holub.patterns.SingletonEnum;
 
 import com.holub.ui.MenuSite;
+
 
 /**
  * The Universe is a mediator that sits between the Swing
@@ -52,11 +51,7 @@ public class Universe extends JPanel
 
 
 	//FIXME 초기값 DefaultPattern 으로 바꾸기
-
 	private Pattern pattern = SingletonEnum.INSTANCE.getPattern();		//Default Pattern
-
-
-
 
 	private Universe()
 	{	// Create the nested Cells that comprise the "universe." A bug
@@ -105,22 +100,20 @@ public class Universe extends JPanel
 		setOpaque		( true			 );
 
 		addMouseListener					//{=Universe.mouse}
-				(	new MouseAdapter()
-					 {	public void mousePressed(MouseEvent e)
-					 {	Rectangle bounds = getBounds();
-						 bounds.x = 0;
-						 bounds.y = 0;
+		(	new MouseAdapter()
+			{	public void mousePressed(MouseEvent e)
+				{	Rectangle bounds = getBounds();
+					bounds.x = 0;
+					bounds.y = 0;
 
+					int pixelsPerCell = bounds.width / DEFAULT_GRID_SIZE / DEFAULT_GRID_SIZE;
+					pattern.getPoints(bounds, e.getPoint(), pixelsPerCell)
+							.forEach(point -> outermostCell.userClicked(point, bounds));
 
-
-						 int pixelsPerCell = bounds.width / DEFAULT_GRID_SIZE / DEFAULT_GRID_SIZE;
-						 pattern.getPoints(bounds, e.getPoint(), pixelsPerCell)
-								 .forEach(point -> outermostCell.userClicked(point, bounds));
-
-						 repaint();
-					 }
-					 }
-				);
+					repaint();
+				}
+			}
+		);
 
 		MenuSite.addLine( this, "Grid", "Clear",
 				new ActionListener()
