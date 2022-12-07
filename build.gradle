@@ -12,11 +12,13 @@ repositories {
 
 ext {
     jUnitVersion = "5.8.1"
+    assertJVersion = "3.11.1"
 }
 
 dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api:${jUnitVersion}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${jUnitVersion}"
+    testImplementation "org.assertj:assertj-core:${assertJVersion}"
 }
 
 test {

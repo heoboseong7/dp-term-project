@@ -7,13 +7,11 @@ import javax.swing.*;
 import java.awt.event.*;
 
 import com.holub.io.Files;
+import com.holub.patterns.Pattern;
+import com.holub.patterns.SingletonEnum;
+
 import com.holub.ui.MenuSite;
 
-import com.holub.life.Cell;
-import com.holub.life.Storable;
-import com.holub.life.Clock;
-import com.holub.life.Neighborhood;
-import com.holub.life.Resident;
 
 /**
  * The Universe is a mediator that sits between the Swing
@@ -47,43 +45,53 @@ public class Universe extends JPanel
 	// The constructor is private so that the universe can be created
 	// only by an outer-class method [Neighborhood.createUniverse()].
 
+	/////////////////////////////////////////////////////////////
+
+
+
+
+	//FIXME 초기값 DefaultPattern 으로 바꾸기
+	private Pattern pattern = SingletonEnum.INSTANCE.getPattern();		//Default Pattern
+
 	private Universe()
 	{	// Create the nested Cells that comprise the "universe." A bug
 		// in the current implementation causes the program to fail
 		// miserably if the overall size of the grid is too big to fit
 		// on the screen.
 
+
+
 		outermostCell = new Neighborhood
-						(	DEFAULT_GRID_SIZE,
-							new Neighborhood
-							(	DEFAULT_GRID_SIZE,
-								new Resident()
-							)
-						);
+				(	DEFAULT_GRID_SIZE,
+						new Neighborhood
+								(	DEFAULT_GRID_SIZE,
+										new Resident()
+								)
+				);
 
 		final Dimension PREFERRED_SIZE =
-						new Dimension
+				new Dimension
 						(  outermostCell.widthInCells() * DEFAULT_CELL_SIZE,
-						   outermostCell.widthInCells() * DEFAULT_CELL_SIZE
+								outermostCell.widthInCells() * DEFAULT_CELL_SIZE
 						);
 
 		addComponentListener
-		(	new ComponentAdapter()
-			{	public void componentResized(ComponentEvent e)
-				{
-					// Make sure that the cells fit evenly into the
-					// total grid size so that each cell will be the
-					// same size. For example, in a 64x64 grid, the
-					// total size must be an even multiple of 63.
+				(	new ComponentAdapter()
+					 {	public void componentResized(ComponentEvent e)
+					 {
+						 // Make sure that the cells fit evenly into the
+						 // total grid size so that each cell will be the
+						 // same size. For example, in a 64x64 grid, the
+						 // total size must be an even multiple of 63.
 
-					Rectangle bounds = getBounds();
-					bounds.height /= outermostCell.widthInCells();
-					bounds.height *= outermostCell.widthInCells();
-					bounds.width  =  bounds.height;
-					setBounds( bounds );
-				}
-			}
-		);
+						 Rectangle bounds = getBounds();
+						 bounds.height /= outermostCell.widthInCells();
+						 bounds.height *= outermostCell.widthInCells();
+						 bounds.width  =  bounds.height;
+						 setBounds( bounds );
+					 }
+					 }
+				);
 
 		setBackground	( Color.white	 );
 		setPreferredSize( PREFERRED_SIZE );
@@ -97,67 +105,105 @@ public class Universe extends JPanel
 				{	Rectangle bounds = getBounds();
 					bounds.x = 0;
 					bounds.y = 0;
-					outermostCell.userClicked(e.getPoint(),bounds);
+
+					int pixelsPerCell = bounds.width / DEFAULT_GRID_SIZE / DEFAULT_GRID_SIZE;
+					pattern.getPoints(bounds, e.getPoint(), pixelsPerCell)
+							.forEach(point -> outermostCell.userClicked(point, bounds));
+
 					repaint();
 				}
 			}
 		);
 
 		MenuSite.addLine( this, "Grid", "Clear",
-			new ActionListener()
-			{	public void actionPerformed(ActionEvent e)
+				new ActionListener()
+				{	public void actionPerformed(ActionEvent e)
 				{	outermostCell.clear();
 					repaint();
 				}
-			}
+				}
 		);
 
 		MenuSite.addLine			// {=Universe.load.setup}
-		(	this, "Grid", "Load",
-			new ActionListener()
-			{	public void actionPerformed(ActionEvent e)
-				{	doLoad();
-				}
-			}
-		);
+				(	this, "Grid", "Load",
+						new ActionListener()
+						{	public void actionPerformed(ActionEvent e)
+						{	doLoad();
+						}
+						}
+				);
 
 		MenuSite.addLine
-		(	this, "Grid", "Store",
-			new ActionListener()
-			{	public void actionPerformed(ActionEvent e)
-				{	doStore();
-				}
-			}
-		);
+				(	this, "Grid", "Store",
+						new ActionListener()
+						{	public void actionPerformed(ActionEvent e)
+						{	doStore();
+						}
+						}
+				);
 
 		MenuSite.addLine
-		(	this, "Grid", "Exit",
-			new ActionListener()
-			{	public void actionPerformed(ActionEvent e)
-		        {	System.exit(0);
-		        }
-			}
-		);
+				(	this, "Grid", "Exit",
+						new ActionListener()
+						{	public void actionPerformed(ActionEvent e)
+						{	System.exit(0);
+						}
+						}
+				);
+
+
+
+
+
+
 
 		Clock.instance().addClockListener //{=Universe.clock.subscribe}
-		(	new Clock.Listener()
-			{	public void tick()
-				{	if( outermostCell.figureNextState
-						   ( Cell.DUMMY,Cell.DUMMY,Cell.DUMMY,Cell.DUMMY,
-							 Cell.DUMMY,Cell.DUMMY,Cell.DUMMY,Cell.DUMMY
-						   )
-					  )
-					{	if( outermostCell.transition() )
-							refreshNow();
-					}
-				}
-			}
-		);
+				(	new Clock.Listener()
+					 {	public void tick()
+					 {	if( outermostCell.figureNextState
+							 ( Cell.DUMMY,Cell.DUMMY,Cell.DUMMY,Cell.DUMMY,
+									 Cell.DUMMY,Cell.DUMMY,Cell.DUMMY,Cell.DUMMY
+							 )
+					 )
+					 {	if( outermostCell.transition() )
+						 refreshNow();
+					 }
+					 }
+					 }
+				);
+
+
+		MenuSite.addLine
+				(	this, "Pattern", "Default",
+						new ActionListener()
+						{	public void actionPerformed(ActionEvent e)
+						{
+							pattern = SingletonEnum.INSTANCE.getPattern();
+
+							//pattern.setPattern?
+						}
+						}
+				);
+		MenuSite.addLine
+				(	this, "Pattern", "Plus",
+						new ActionListener()
+						{	public void actionPerformed(ActionEvent e)
+						{
+
+							pattern =SingletonEnum.INSTANCE.getPluspattern();
+
+							//pattern.setPattern?
+						}
+						}
+				);
 	}
 
 	/** Singleton Accessor. The Universe object itself is manufactured
 	 *  in Neighborhood.createUniverse()
 	 */
+
+
+
 
 	public static Universe instance()
 	{	return theInstance;
@@ -165,44 +211,44 @@ public class Universe extends JPanel
 
 	private void doLoad()
 	{	try
-		{
-			FileInputStream in = new FileInputStream(
-			   Files.userSelected(".",".life","Life File","Load"));
+	{
+		FileInputStream in = new FileInputStream(
+				Files.userSelected(".",".life","Life File","Load"));
 
-			Clock.instance().stop();		// stop the game and
-			outermostCell.clear();			// clear the board.
+		Clock.instance().stop();		// stop the game and
+		outermostCell.clear();			// clear the board.
 
-			Storable memento = outermostCell.createMemento();
-			memento.load( in );
-			outermostCell.transfer( memento, new Point(0,0), Cell.LOAD );
+		Storable memento = outermostCell.createMemento();
+		memento.load( in );
+		outermostCell.transfer( memento, new Point(0,0), Cell.LOAD );
 
-			in.close();
-		}
-		catch( IOException theException )
-		{	JOptionPane.showMessageDialog( null, "Read Failed!",
-					"The Game of Life", JOptionPane.ERROR_MESSAGE);
-		}
+		in.close();
+	}
+	catch( IOException theException )
+	{	JOptionPane.showMessageDialog( null, "Read Failed!",
+			"The Game of Life", JOptionPane.ERROR_MESSAGE);
+	}
 		repaint();
 	}
 
 	private void doStore()
 	{	try
-		{
-			FileOutputStream out = new FileOutputStream(
-				  Files.userSelected(".",".life","Life File","Write"));
+	{
+		FileOutputStream out = new FileOutputStream(
+				Files.userSelected(".",".life","Life File","Write"));
 
-			Clock.instance().stop();		// stop the game
+		Clock.instance().stop();		// stop the game
 
-			Storable memento = outermostCell.createMemento();
-			outermostCell.transfer( memento, new Point(0,0), Cell.STORE );
-			memento.flush(out);
+		Storable memento = outermostCell.createMemento();
+		outermostCell.transfer( memento, new Point(0,0), Cell.STORE );
+		memento.flush(out);
 
-			out.close();
-		}
-		catch( IOException theException )
-		{	JOptionPane.showMessageDialog( null, "Write Failed!",
-					"The Game of Life", JOptionPane.ERROR_MESSAGE);
-		}
+		out.close();
+	}
+	catch( IOException theException )
+	{	JOptionPane.showMessageDialog( null, "Write Failed!",
+			"The Game of Life", JOptionPane.ERROR_MESSAGE);
+	}
 	}
 
 	/** Override paint to ask the outermost Neighborhood
@@ -234,23 +280,23 @@ public class Universe extends JPanel
 
 	private void refreshNow()
 	{	SwingUtilities.invokeLater
-		(	new Runnable()
-			{	public void run()
-				{	Graphics g = getGraphics();
-					if( g == null )		// Universe not displayable
-						return;
-					try
-					{
-						Rectangle panelBounds = getBounds();
-						panelBounds.x = 0;
-						panelBounds.y = 0;
-						outermostCell.redraw(g, panelBounds, false); //{=Universe.redraw2}
-					}
-					finally
-					{	g.dispose();
-					}
-				}
-			}
-		);
+			(	new Runnable()
+				 {	public void run()
+				 {	Graphics g = getGraphics();
+					 if( g == null )		// Universe not displayable
+						 return;
+					 try
+					 {
+						 Rectangle panelBounds = getBounds();
+						 panelBounds.x = 0;
+						 panelBounds.y = 0;
+						 outermostCell.redraw(g, panelBounds, false); //{=Universe.redraw2}
+					 }
+					 finally
+					 {	g.dispose();
+					 }
+				 }
+				 }
+			);
 	}
 }

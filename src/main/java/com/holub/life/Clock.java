@@ -1,10 +1,10 @@
 package com.holub.life;
 
-import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
 import java.util.Timer;		// overrides java.awt.timer
 
+import com.holub.life.ticking.DoubleTickStrategy;
 import com.holub.life.ticking.TickingStrategy;
 import com.holub.life.ticking.JustTickStrategy;
 import com.holub.ui.MenuSite;
@@ -88,6 +88,7 @@ public class Clock
 		// menu-selection events except "Exit"
 		MenuSite.addLine(this,"Go","Halt", new TickingStrategy(this, 0));
 		MenuSite.addLine(this,"Go","Tick (Single Step)", new JustTickStrategy(this));
+		MenuSite.addLine(this,"Go","Double Tick (Two Step)", new DoubleTickStrategy(this));
 		MenuSite.addLine(this,"Go","Agonizing", new TickingStrategy(this, 500));
 		MenuSite.addLine(this,"Go","Slow", new TickingStrategy(this, 150));
 		MenuSite.addLine(this,"Go","Medium", new TickingStrategy(this, 70));
@@ -159,4 +160,5 @@ public class Clock
 					MenuSelectionManager.defaultManager().getSelectedPath();
 		return ( path != null && path.length > 0 );
 	}
+
 }
